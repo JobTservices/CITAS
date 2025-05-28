@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Servicios Técnicos Trejo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: -1;
+      transition: background-image 1s ease-in-out;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      max-width: 480px;
+      margin: auto;
+    }
+
+    form {
+      background: #121212;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+      max-width: 600px;
+      width: 100%;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+      color: #ddd;
+    }
+
+    select, textarea, input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1.5px solid #444;
+      font-size: 1rem;
+      background-color: #1c1c1c;
+      color: #eee;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #4567d2;
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 5px 12px rgba(69,103,210,0.7);
+    }
+
+    .hidden { display: none; }
+
+    .confirmation {
+      margin-top: 24px;
+      padding: 14px 20px;
+      background-color: #2a462b;
+      border: 2px solid #57b74a;
+      border-radius: 10px;
+      color: #cde5b5;
+      font-weight: 700;
+      text-align: center;
+      display: none;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Servicios Técnicos Trejo</h1>
+    <p>Agenda fácilmente instalaciones o reparaciones para tu hogar u oficina</p>
+  </header>
+
+  <form id="serviceForm" method="POST" action="https://formspree.io/f/xnndedor" novalidate>
+    <label for="name">Nombre completo</label>
+    <input type="text" id="name" name="name" required placeholder="Tu nombre completo" />
+
+    <label for="street">Calle y número</label>
+    <input type="text" id="street" name="street" required placeholder="Ej. Av. Las Palmas 103-B" />
+
+    <label for="neighborhood">Colonia</label>
+    <input type="text" id="neighborhood" name="neighborhood" required placeholder="Colonia o fraccionamiento" />
+
+    <label for="betweenStreets">Entre calles</label>
+    <input type="text" id="betweenStreets" name="betweenStreets" required placeholder="Ej. Entre Magnolia y Azucena" />
+
+    <label for="contact">Teléfono o correo electrónico</label>
+    <input type="text" id="contact" name="contact" required placeholder="Ej. 4525012120 o correo@ejemplo.com" />
+
+    <label for="serviceType">Categoría de servicio</label>
+    <select id="serviceType" name="serviceType" required>
+      <option value="" disabled selected>Selecciona una categoría</option>
+      <option value="electricidad">Electricidad</option>
+      <option value="plomeria">Plomería</option>
+      <option value="carpinteria">Carpintería</option>
+      <option value="pintura">Pintura</option>
+      <option value="aire_acondicionado">Aire acondicionado</option>
+      <option value="herrería">Herrería</option>
+    </select>
+
+    <div id="subservicesContainer" class="hidden">
+      <label for="subservices">Subservicio(s)</label>
+      <select id="subservices" name="subservices" multiple></select>
+    </div>
+
+    <div id="otherDetails" class="hidden">
+      <label for="otherText">Describe el servicio requerido</label>
+      <textarea id="otherText" name="otherText" maxlength="1000" placeholder="Describe el servicio requerido..."></textarea>
+    </div>
+
+    <input type="hidden" name="_subject" id="emailSubject" value="Nuevo servicio solicitado" />
+    <input type="hidden" name="folio" id="folioField" value="" />
+
+    <button type="submit">Solicitar Servicio</button>
+  </form>
+
+  <div class="confirmation" id="confirmationMessage">
+    Gracias por la información, a la brevedad te confirmaremos el día y horario disponible.
+  </div>
+
+  <script>
+    const images = [
+      "https://images.unsplash.com/photo-1581091870630-fd1d56f84395",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6950",
+      "https://images.unsplash.com/photo-1616628182504-4459bbbf9c3e",
+      "https://images.unsplash.com/photo-1570129477497-ef1d7f4e6a3e",
+      "https://images.unsplash.com/photo-1600573473238-f74bd3c7ccdf",
+      "https://images.unsplash.com/photo-1599658880436-c61792e70672"
+    ];
+    let current = 0;
+    function changeBackground() {
+      document.body.style.backgroundImage = `url(${images[current]})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      current = (current + 1) % images.length;
+    }
+    setInterval(changeBackground, 3500);
+    window.onload = changeBackground;
+
+    const form = document.getElementById('serviceForm');
+    const confirmation = document.getElementById('confirmationMessage');
+    const emailSubjectInput = document.getElementById('emailSubject');
+    const nameInput = document.getElementById('name');
+    const folioField = document.getElementById('folioField');
+    const serviceTypeSelect = document.getElementById('serviceType');
+    const subservicesSelect = document.getElementById('subservices');
+    const subservicesContainer = document.getElementById('subservicesContainer');
+    const otherDetails = document.getElementById('otherDetails');
+    const otherText = document.getElementById('otherText');
+
+    const subservicesData = {
+      electricidad: ["Revisión técnica", "Instalación de ventilador", "Instalación de luminarias", "Instalación de candil colgante", "Instalación/Reemplazo de módulo eléctrico", "Instalación/Reemplazo de centro de carga", "Automatización de sistema de bombeo", "Instalación de regadera eléctrica", "Instalación eléctrica inteligente", "Instalación de acometida", "Reparación de corto circuito", "Conduit/enmanguerado", "Otro"],
+      plomeria: [
+        "Visita técnica",
+        "Reparación de fuga - Gas",
+        "Reparación de fuga - Agua",
+        "Instalación de tinaco",
+        "Lavado de tinaco/cisterna",
+        "Calentador solar - Venta",
+        "Calentador solar - Instalación",
+        "Calentador solar - Mantenimiento",
+        "Boiler - Instalación",
+        "Boiler - Mantenimiento",
+        "Instalación de bomba hidráulica",
+        "Mantenimiento de hidroneumático",
+        "Instalación de tanque estacionario",
+        "Reemplazo de inodoro",
+        "Reemplazo de mezcladora",
+        "Instalación de estufa",
+        "Instalación de refrigerador",
+        "Instalación de filtros purificadores de agua",
+        "Otro"
+      ],
+      carpinteria: ["Cotización para fabricación de muebles", "Cotización para fabricación de cocina", "Cotización para fabricación de clóset", "Cotización para fabricación de puerta", "Instalación de puerta prefabricada", "Otro"],
+      pintura: ["Pintura interior", "Pintura exterior residencial", "Esmalte en carpintería metálica", "Resanado y reparación de muros", "Otro"],
+      aire_acondicionado: ["Venta de equipo e instalación", "Instalación", "Mantenimiento", "Otro"],
+      herrería: ["Fabricación bajo diseño", "Bases para tinaco", "Reparaciones", "Tejados", "Estructuras", "Otro"]
+    };
+
+    serviceTypeSelect.addEventListener('change', function () {
+      const selected = this.value;
+      const subs = subservicesData[selected] || [];
+      subservicesSelect.innerHTML = "";
+      subs.forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub;
+        opt.textContent = sub;
+        subservicesSelect.appendChild(opt);
+      });
+      subservicesContainer.classList.remove('hidden');
+      otherDetails.classList.add('hidden');
+    });
+
+    subservicesSelect.addEventListener('change', function () {
+      const selected = Array.from(this.selectedOptions).map(opt => opt.value);
+      if (selected.includes("Otro")) {
+        otherDetails.classList.remove('hidden');
+        otherText.placeholder = "Describe el servicio requerido...";
+      } else {
+        otherDetails.classList.add('hidden');
+        otherText.value = "";
+      }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+      const pad = n => n.toString().padStart(2, '0');
+      const folio = `FOLIO-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}-${Math.floor(1000 + Math.random() * 9000)}`;
+      folioField.value = folio;
+      emailSubjectInput.value = `Solicitud de ${nameInput.value} - ${folio}`;
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(response => {
+        if (response.ok) {
+          form.style.display = 'none';
+          confirmation.style.display = 'block';
+        } else {
+          alert("Error al enviar. Inténtalo más tarde.");
+        }
+      }).catch(() => {
+        alert("Error al enviar. Inténtalo más tarde.");
+      });
+    });
+  </script>
+</body>
+</html>
