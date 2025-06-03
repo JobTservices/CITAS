@@ -138,6 +138,7 @@
       <option value="pintura">Pintura</option>
       <option value="aire_acondicionado">Aire acondicionado</option>
       <option value="herrería">Herrería</option>
+      <option value="instalaciones_generales">Instalaciones generales</option>
     </select>
 
     <div id="subservicesContainer" class="hidden">
@@ -217,7 +218,13 @@
       carpinteria: ["Cotización para fabricación de muebles", "Cotización para fabricación de cocina", "Cotización para fabricación de clóset", "Cotización para fabricación de puerta", "Instalación de puerta prefabricada", "Otro"],
       pintura: ["Pintura interior", "Pintura exterior residencial", "Esmalte en carpintería metálica", "Resanado y reparación de muros", "Otro"],
       aire_acondicionado: ["Venta de equipo e instalación", "Instalación", "Mantenimiento", "Otro"],
-      herrería: ["Fabricación bajo diseño", "Bases para tinaco", "Reparaciones", "Tejados", "Estructuras", "Otro"]
+      herrería: ["Fabricación bajo diseño", "Bases para tinaco", "Reparaciones", "Tejados", "Estructuras", "Otro"],
+      instalaciones_generales: [
+        "Instalación de soporte para pantalla",
+        "Armado de muebles prefabricados",
+        "Instalación/configuración de productos electrónicos",
+        "Otro"
+      ]
     };
 
     serviceTypeSelect.addEventListener('change', function () {
